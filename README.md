@@ -13,7 +13,7 @@ A free, self-hosted alternative to Cluely. Bring your own AI key (OpenAI · Anth
 ---
 
 > [!IMPORTANT]
-> **Please read this first.** cue tries to stay out of screen recordings/shares, but this is **best-effort, not guaranteed** — on macOS 15.4+ Apple can let modern capture tools see it anyway, on Windows 10 builds older than 2004 it degrades to a black box instead of true exclusion, and a phone camera always can. Using a hidden assistant during a **proctored exam, job interview, or recorded meeting** may break that platform's rules and, in some places, consent laws. cue is built for legitimate uses — your own notes, studying, accessibility, and practice. **You are responsible for how you use it.**
+> **Please read this first.** cue tries to stay out of screen recordings/shares, but this is **best-effort, not guaranteed** — on macOS 15.4+ Apple can let modern capture tools see it anyway, on Windows browser-based screen sharing (Edge, Chrome) may still show cue depending on the capture method used, on Windows 10 builds older than 2004 it degrades to a black box instead of true exclusion, and a phone camera always can. Using a hidden assistant during a **proctored exam, job interview, or recorded meeting** may break that platform's rules and, in some places, consent laws. cue is built for legitimate uses — your own notes, studying, accessibility, and practice. **You are responsible for how you use it.**
 
 ---
 
@@ -40,7 +40,7 @@ It's a copilot for **live meetings** ("what do I say to that?") and **coding pro
 | Screen + coding help | ✅ | ✅ |
 | Your mic (the **You** channel) | ✅ | ✅ |
 | Meeting audio (the **Them** channel) | ✅ macOS 14.4+ | ✅ |
-| Hidden from screen shares | ⚠️ best-effort, weaker on macOS 15.4+ | ✅ `WDA_EXCLUDEFROMCAPTURE` |
+| Hidden from screen shares | ⚠️ best-effort, weaker on macOS 15.4+ | ⚠️ best-effort via `WDA_EXCLUDEFROMCAPTURE` — works with Zoom (window filtering mode), not guaranteed in all browsers |
 | Permissions to grant | Microphone **and** Screen Recording | Microphone only |
 
 > [!NOTE]
@@ -64,7 +64,7 @@ Go to the [**Releases**](../../releases) page, then choose your platform:
 You need [Node.js](https://nodejs.org) 22.12+ installed (required by dev dependencies). No Xcode and no Visual Studio build tools required — cue deliberately avoids native modules.
 
 ```bash
-git clone https://github.com/Blueturboguy07/cue.git
+git clone https://github.com/elinam-dev/cue.git
 cd cue
 npm install
 npm start
@@ -259,9 +259,14 @@ Run `xattr -cr /Applications/cue.app` in Terminal once (see Install → Option A
 
 Issues and PRs welcome. cue is intentionally small and readable — `main.js` (app + capture + AI), `renderer/` (the UI), `src/` (providers). No build step for the source (plain HTML/CSS/JS).
 
+### Known limitations
+
+- **Windows browser screen sharing** — `WDA_EXCLUDEFROMCAPTURE` is applied via [koffi](https://github.com/Koromix/koffi) (pure-JS FFI, no native build tools needed) but browser-based screen sharing in Edge/Chrome may still capture the window depending on the capture pipeline used. Zoom desktop app with "Advanced capture with window filtering" works reliably.
+- **macOS 15.4+** — Apple allows some capture tools to bypass `NSWindowSharingNone`, making invisibility best-effort.
+
 ## Credits & license
 
-Built as an open-source study of how tools like **Cluely** and **Interview Coder** work. Modeled on the open-source clones `pickle-com/glass` and `sohzm/cheating-daddy`.
+Built and maintained by [elinam-dev](https://github.com/elinam-dev) as an open-source study of how tools like **Cluely** and **Interview Coder** work. Modeled on the open-source clones `pickle-com/glass` and `sohzm/cheating-daddy`.
 
 Local transcription uses [whisper.cpp](https://github.com/ggml-org/whisper.cpp), distributed under the MIT License. Its license notice is included in packaged runtimes.
 
