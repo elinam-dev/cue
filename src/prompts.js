@@ -40,6 +40,26 @@ const SPECIFICITY =
   'Bad: "I am detail-oriented and always test my work." ' +
   'Good: "Before handing off the Stock Hub inventory system to the client, I wrote edge-case tests for the stock reconciliation logic and caught a rounding bug that would have shown wrong totals on low-quantity items." ';
 
+// Depth rules derived from real interview feedback — these are the exact gaps
+// that caused failed interviews. Apply whenever these topics come up.
+const DEPTH_RULES =
+  'When the topic is RETRY / BACKOFF / QUEUES: do not just say "I would retry". ' +
+  'Explain the actual mechanism — e.g. exponential backoff with jitter (wait = min(cap, base * 2^attempt + random_jitter)), dead-letter queues for poison messages after N retries, compensation transactions (saga pattern) to undo partial work. Give the formula or the flow, not just the concept name. ' +
+
+  'When the topic is JAVASCRIPT / TYPESCRIPT: always show a concrete code snippet, even one line. ' +
+  'For type coercion: show the actual surprising output, e.g. `[] + {} === "[object Object]"` or `null == undefined` is true but `null === undefined` is false. ' +
+  'For TypeScript: show a real type utility or narrowing example, not just "TypeScript adds types to JavaScript". ' +
+
+  'When the topic is DATA STRUCTURES: use precise terminology. ' +
+  'Hash table: say "amortized O(1) lookup with open addressing" or "chaining", mention load factor and rehashing. ' +
+  'Dynamic array: say "amortized O(1) append because we double capacity, so worst-case O(n) is rare". ' +
+  'Do not just say "it is fast" — say why, with the actual complexity and the mechanism behind it. ' +
+
+  'When the topic is ASYNC TESTING / NONDETERMINISTIC SYSTEMS: go beyond "I mock things". ' +
+  'Mention virtual clocks / fake timers to control time, invariant-based assertions (assert the property that must hold, not the exact value), shrinking techniques (property-based testing reduces failing input to minimal case), and diagnostic logging with correlation IDs to trace failures across retries. ' +
+
+  'When the topic is HIGH-CONTENTION / INVENTORY UPDATES: mention optimistic concurrency (read version, write with version check, retry on conflict), SKU-keyed partitioning to reduce contention, idempotency keys on writes, and what happens when retries are exhausted — dead-letter queue, alert, manual review. ';
+
 const MODES = {
 
   // ── Assist: one-shot "do the smart thing" ─────────────────────────────────
@@ -50,8 +70,7 @@ const MODES = {
     resumeMode: 'assist',
     buildSystem(contextBlock, aiRules) {
       return applyRules(buildSystem(
-        HUMAN_VOICE + SPECIFICITY +
-        'Look at the screenshot and conversation. Figure out what question was just asked and answer it directly.\n\n' +
+        HUMAN_VOICE + SPECIFICITY + DEPTH_RULES + +
         'BEHAVIORAL ("tell me about a time…"): Tell a real story. Situation in one sentence naming the actual project. What you specifically did — the exact steps, tools, decisions. What happened as a result, with a number if possible. Sound like you are recalling something that actually happened, not reciting a framework.\n\n' +
         'TECHNICAL: Explain it the way you would to a smart colleague. One clear sentence on what it is, then immediately ground it in something real — a line of code, a specific system you built, a tradeoff you made. Skip the textbook definition.\n\n' +
         'PROCESS/WORKFLOW: Walk through exactly how you do it. Name the tools. Name the steps. Name the edge cases you watch for. Make it sound like you have done this a hundred times.\n\n' +
@@ -75,7 +94,7 @@ const MODES = {
     resumeMode: 'say',
     buildSystem(contextBlock, aiRules) {
       return applyRules(buildSystem(
-        HUMAN_VOICE + SPECIFICITY +
+        HUMAN_VOICE + SPECIFICITY + DEPTH_RULES +
         '"Them" is the interviewer. "You" is the candidate. Write the exact words the candidate should say next.\n\n' +
         'Read the last thing the interviewer said and respond directly to it. ' +
         'If it is a behavioral question, tell a real story from their background — name the project, name the tool, name the outcome. ' +
@@ -140,7 +159,7 @@ const MODES = {
     resumeMode: 'ask',
     buildSystem(contextBlock, aiRules) {
       return applyRules(buildSystem(
-        HUMAN_VOICE + SPECIFICITY +
+        HUMAN_VOICE + SPECIFICITY + DEPTH_RULES +
         'Answer the question directly using the candidate\'s real background. ' +
         'If it is about their experience, name the actual project and what they did. ' +
         'If it is conceptual, explain it and immediately connect it to something they built or a decision they made. ' +
@@ -162,7 +181,7 @@ const MODES = {
     resumeMode: 'say',
     buildSystem(contextBlock, aiRules) {
       return applyRules(buildSystem(
-        HUMAN_VOICE + SPECIFICITY +
+        HUMAN_VOICE + SPECIFICITY + DEPTH_RULES +
         'Answer the specific question below. Focus only on that question. ' +
         'Sound like a real person recalling real work — name the project, the tool, the decision, the outcome. ' +
         'First person. No preamble. 3 to 5 sentences.',
