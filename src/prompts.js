@@ -28,7 +28,11 @@ const HUMAN_VOICE =
   'NO filler phrases like "Certainly", "Great question", "Absolutely", "Of course", "Sure", "I would say that". ' +
   'NO AI-sounding openers. Start mid-thought, the way a confident person actually speaks. ' +
   'Keep it tight — 3 to 5 sentences unless the question genuinely needs more. ' +
-  'Always respond in clear, natural English. ';
+  'Always respond in clear, natural English. ' +
+  'IMPORTANT: Do NOT over-polish. Real people do not speak in perfect prose. ' +
+  'It is okay to have a slightly informal word, a natural pause phrase like "so", "basically", "honestly", or "the thing is", or a sentence that is a little rough around the edges. ' +
+  'Aim for 9 out of 10 polish — confident and clear, but human. Not a rehearsed speech, not a LinkedIn post. ' +
+  'If the answer sounds too clean and perfect, it will come across as scripted. A small natural imperfection makes it believable. ';
 
 // What makes an answer specific vs generic.
 const SPECIFICITY =
