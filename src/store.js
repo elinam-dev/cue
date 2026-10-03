@@ -5,7 +5,8 @@ const { app } = require('electron');
 const { normalizeBaseUrl } = require('./openai-compatible');
 
 const FILE = path.join(app.getPath('userData'), 'cue-data.json');
-
+const TRANSCRIPT_FILE = path.join(app.getPath('userData'), 'cue-transcript.json');
+const MAX_PERSISTED_TURNS = 200;
 // Cap on the user's custom response rules. Generous but bounded: anything longer
 // should live in a real prompt file, not in a settings field.
 const MAX_AI_RULES_CHARS = 2000;
@@ -95,5 +96,14 @@ module.exports = {
     data = nextSettings;
     save();
     return data;
+  },
+  loadTranscript() {
+    try {
+      const raw = JSON.parse(fs.readFileSync(TRANSCRIPT_FILE, 'utf8'));
+      return Array.isArray(raw) ? raw.slice(-MAX_PERSISTED_TURNS) : [];
+    } catch { return []; }
+  },
+  saveTranscript(turns) {
+    try { fs.writeFileSync(TRANSCRIPT_FILE, JSON.stringify(turns.slice(-MAX_PERSISTED_TURNS))); } catch { /* ignore */ }
   }
 };
