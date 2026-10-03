@@ -32,7 +32,10 @@ const HUMAN_VOICE =
   'IMPORTANT: Do NOT over-polish. Real people do not speak in perfect prose. ' +
   'It is okay to have a slightly informal word, a natural pause phrase like "so", "basically", "honestly", or "the thing is", or a sentence that is a little rough around the edges. ' +
   'Aim for 9 out of 10 polish — confident and clear, but human. Not a rehearsed speech, not a LinkedIn post. ' +
-  'If the answer sounds too clean and perfect, it will come across as scripted. A small natural imperfection makes it believable. ';
+  'If the answer sounds too clean and perfect, it will come across as scripted. A small natural imperfection makes it believable. ' +
+  'STRUCTURE: Every answer must flow linearly — one clear thread from start to finish. ' +
+  'Do not jump between ideas. Do not circle back. Lead with the direct answer, then support it with one specific example, then land it with the outcome or takeaway. ' +
+  'If the answer has multiple parts, connect them with transitions like "and then", "so what I did was", "the reason for that is", "which meant that" — not as separate fragments. ';
 
 // What makes an answer specific vs generic.
 const SPECIFICITY =
@@ -62,7 +65,33 @@ const DEPTH_RULES =
   'When the topic is ASYNC TESTING / NONDETERMINISTIC SYSTEMS: go beyond "I mock things". ' +
   'Mention virtual clocks / fake timers to control time, invariant-based assertions (assert the property that must hold, not the exact value), shrinking techniques (property-based testing reduces failing input to minimal case), and diagnostic logging with correlation IDs to trace failures across retries. ' +
 
-  'When the topic is HIGH-CONTENTION / INVENTORY UPDATES: mention optimistic concurrency (read version, write with version check, retry on conflict), SKU-keyed partitioning to reduce contention, idempotency keys on writes, and what happens when retries are exhausted — dead-letter queue, alert, manual review. ';
+  'When the topic is HIGH-CONTENTION / INVENTORY UPDATES: mention optimistic concurrency (read version, write with version check, retry on conflict), SKU-keyed partitioning to reduce contention, idempotency keys on writes, and what happens when retries are exhausted — dead-letter queue, alert, manual review. ' +
+
+  'When the topic is GIT / GITHUB ACTIONS / CI-CD: be specific and sequential. ' +
+  'Git: distinguish fetch vs pull (fetch updates remote refs, pull = fetch + merge), name the exact commands for interactive rebase (`git rebase -i HEAD~N`), bisect (`git bisect start/good/bad`), and conflict prevention (feature branches, short-lived PRs, rebase before merge). ' +
+  'GitHub Actions: name the actual fix steps — check file permissions (`chmod +x`), use `act` for local debugging, check runner logs under the step that failed, use `ACTIONS_STEP_DEBUG=true` secret for verbose output. ' +
+  'Structure CI/CD answers as: what triggers it → what it does → how you debug when it breaks. ' +
+
+  'When the topic is BASH / PYTHON AUTOMATION: give the actual pattern, not the concept. ' +
+  'Error handling in bash: `set -euo pipefail` at the top, trap ERR for cleanup. ' +
+  'Secure subprocess in Python: use `subprocess.run([...], check=True)` with a list not a string to avoid shell injection, add `timeout=` to prevent hangs. ' +
+  'Structure automation answers as: what it does → the key reliability decision → the security consideration. ' +
+
+  'When the topic is AUTH / REST APIs / OAUTH / JWT: walk through the flow sequentially. ' +
+  'OAuth: authorization code flow — redirect to provider, get code, exchange for token, store refresh token securely (httpOnly cookie, not localStorage). ' +
+  'JWT: validate signature, check exp claim, check iss/aud. CSRF: use SameSite=Strict cookies or CSRF tokens. ' +
+  'Structure security answers as: the happy path → the attack vector → the mitigation. ' +
+
+  'When the topic is QA / BUG REPORTS / ACCEPTANCE CRITERIA: be explicit and templated. ' +
+  'Bug report format: environment → steps to reproduce (numbered) → expected vs actual → logs/screenshot → severity. ' +
+  'Acceptance criteria format: Given [state] When [action] Then [outcome] — one line per criterion. ' +
+  'Reproducibility: always include the exact data state that triggers the bug, not just the steps. ' +
+
+  'When the topic is SQL / SNOWFLAKE / DATA: be precise about the tool and the query. ' +
+  'DAU verification: recompute from raw events with `COUNT(DISTINCT user_id)`, check for timezone offsets, deduplication with `QUALIFY ROW_NUMBER() OVER (PARTITION BY user_id, date ORDER BY event_time) = 1`. ' +
+  'Snowflake debugging: check QUERY_HISTORY view, use EXPLAIN to spot bad join types, check QUALIFY logic for unintended row filtering. ' +
+  'RBAC: separate functional roles (reader, writer) from access roles (granted to users), restrict GRANT OPTION to admins only, use masking policies for PII columns. ' +
+  'KPI governance: define the exact time window and revenue measure in the metric definition, maintain a single source of truth view, document exclusion logic explicitly. ';
 
 const MODES = {
 
